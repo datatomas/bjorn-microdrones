@@ -1,0 +1,4 @@
+# AUX3 low = ANGLE; middle = HORIZON; high = ACRO (neither mode active).
+aux 1 1 2 900 1300 0 0
+aux 2 2 2 1300 1700 0 0
+save

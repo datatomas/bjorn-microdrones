@@ -1,0 +1,9 @@
+# Betaflight 4.4.2 / SPEEDYBEEF405MINI; verify radio AUX assignments first.
+# AUX1 high: ARM. AUX2 low: Acro; middle: Angle; high: Horizon.
+# AUX3 high: beeper. AUX4 high: flip over after crash.
+aux 0 0 0 1700 2100 0 0
+aux 1 1 1 1300 1700 0 0
+aux 2 13 2 1700 2100 0 0
+aux 3 35 3 1700 2100 0 0
+aux 4 2 1 1700 2100 0 0
+save

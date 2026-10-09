@@ -1,0 +1,13 @@
+# Proposed Apex 3 throttle and pitch response adjustments.
+# Throttle: soften response near mid-throttle. Pitch: reduce center sensitivity
+# and maximum rotation speed for gentler forward/back stick response.
+# This changes rates, not PIDs. Pitch values assume ACTUAL rates are selected.
+# Confirm rate profile 0 is used for flight and back up the current config
+# before applying. Values are proposed and have not been flight-tested.
+rateprofile 0
+set thr_mid = 50
+set thr_expo = 20
+set pitch_rc_rate = 5
+set pitch_expo = 20
+set pitch_srate = 60
+save

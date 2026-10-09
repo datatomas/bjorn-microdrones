@@ -1,0 +1,29 @@
+aircraft:
+  apex-3:
+    frame: 3-inch Apex; exact model unknown
+    flight_controller: unknown
+    firmware: unknown
+    receiver: ExpressLRS reported on UART4; CRSF proposed
+    video_analog_vtx: Rush Tank Mini reported; exact variant unverified
+    video_control: SmartAudio reported on UART5; TX5 wiring unverified
+    modes_status: Bjorn-25 AUX layout proposed; radio switch mapping unverified
+    hardware_verification: none
+  bjorn-25:
+    frame: 2.5-inch carbon fiber; exact model unknown
+    flight_controller: SPEEDYBEEF405MINI
+    firmware: Betaflight 4.4.2
+    receiver: RadioMaster RP1 V2 2.4 GHz ExpressLRS; CRSF
+    battery_observed: 3S in status output on 2026-10-03
+    video_digital: DJI O4 Air Unit mentioned; installed state and wiring unverified
+    video_analog_vtx: Rush Tiny Tank reported connected
+    video_analog_camera: Baby Ratel 2 planned, not connected at time of conversation
+    motors_props_weight: unknown
+    pid_status: defaults indicated by supplied diff; no measured tune
+    modes_status: AUX1 ARM high; AUX2 Angle middle, Horizon high, Acro low; AUX3 beeper high; AUX4 crash flip high
+  mobula7:
+    frame: Mobula 7 1S
+    flight_controller: CRAZYBEEF4SX1280
+    firmware_config_exports: Betaflight 2026.6.2 per source README
+    firmware_image_filename: Betaflight 2026.6.1; provenance unverified
+    modes_status: AUX1 ARM high; AUX3 Angle low, Horizon middle, Acro high
+    source: Mobula 7 source project

@@ -1,0 +1,14 @@
+# Apex 3 proposed switch layout, matching Bjorn-25 ranges; verify Apex AUX mapping.
+# AUX1 high ARM. AUX2 low Acro (default), middle Angle, high Horizon.
+# AUX3 high beeper. AUX4 high Altitude Hold.
+# AUX5 high Flip Over After Crash. These lines assign switch ranges; they do
+# not add modes to firmware. Altitude Hold requires Betaflight 2025.12+ built
+# with ALTITUDE_HOLD.
+# Verify altitude data and tune hover_throttle before relying on this mode.
+aux 0 0 0 1700 2100 0 0
+aux 1 1 1 1300 1700 0 0
+aux 2 13 2 1700 2100 0 0
+aux 3 35 4 1700 2100 0 0
+aux 4 2 1 1700 2100 0 0
+aux 5 3 3 1700 2100 0 0
+save

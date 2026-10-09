@@ -1,0 +1,9 @@
+*.log
+*.mp4
+*.avi
+*diff_all*.txt
+BTFL_cli_*.txt
+raw-exports/
+secrets/
+.DS_Store
+__pycache__/

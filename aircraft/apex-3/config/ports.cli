@@ -1,0 +1,11 @@
+# For DIAT MAMBAF722_2022A running Betaflight 2026.6.2.
+# Older firmware uses numeric UART identifiers instead of named identifiers.
+# UART1: Disabled. UART4: Serial RX. UART5 Peripheral: VTX (TBS SmartAudio).
+# USB VCP remains the MSP connection. SmartAudio must be wired to TX5.
+# Function masks: UART1 NONE=0, UART4 RX_SERIAL=64, UART5 VTX_SMARTAUDIO=2048.
+serial UART1 0 115200 57600 0 115200
+serial UART4 64 115200 57600 0 115200
+serial UART5 2048 115200 57600 0 115200
+feature RX_SERIAL
+set serialrx_provider = CRSF
+save

@@ -1,0 +1,7 @@
+# Apex 3 only: MAMBAF722_2022A, Betaflight 2026.6.2.
+# Match Betaflight's yaw mixer to the props-out motor rotation.
+# Equivalent to Motors tab: "Motor direction is reversed" ON.
+# This does not change ESC motor spin direction or motor order.
+# Verify physical motor order and spin with props removed before flying.
+set yaw_motors_reversed = ON
+save
