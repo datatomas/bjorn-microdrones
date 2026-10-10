@@ -28,6 +28,16 @@ Before applying any CLI file, save a private backup of the current Apex configur
 
 These rate files are proposals, not PID changes or measured flight tunes. In ACTUAL rates, lowering `pitch_rc_rate` reduces pitch sensitivity around stick center, while lowering `pitch_srate` reduces maximum pitch rotation. The proposed values are 5 and 50. Confirm `rates_type = ACTUAL`, the selected profile, and live values before applying; do not apply a setting if its live value is already at or below the proposal. The selected firmware download is identified above, but the last available CLI backup still reports 4.5.1. Keep firmware flashing and physical flight checks human-operated. No PID, motor, battery, or broader flight tune is proposed.
 
+The pitch file explicitly sets `pitch_rc_rate = 5`, `pitch_expo = 20`, and `pitch_srate = 50` in rate profile 0. Expo 20 is restored from the original `throttle-pitch-response.cli` in commit `7a7d64c`; the preceding file is preserved in commit `3312aee`. This makes the proposed pitch curve reproducible instead of inheriting an unknown expo value. These are proposed values, not a readback or hardware verification.
+
+## Throttle response proposal
+
+For less abrupt small throttle adjustments, the Apex rate-profile 0 proposal keeps `thr_mid = 50` and increases `thr_expo` from 20 to 30. This modest expo increase flattens the response around half stick, with a steeper response farther away; it is a starting point, not a measured flight tune. The previous CLI source is preserved in commit 3312aee.
+
+Throttle Expo controls how gentle that region feels. Throttle Mid positions it along the throttle curve. The actual hover-throttle position is unknown, so midpoint 50 is provisional. If hovering happens well away from half stick, measure the hover position before choosing a different midpoint. Check the throttle graph and change one value at a time, then have the pilot evaluate it cautiously in flight. Expo does not limit descent speed at zero throttle; a slow descent still requires enough throttle to support part of the aircraft's weight.
+
+Static validation checks file structure only. These values have not been applied to or verified on hardware. Confirm the live firmware accepts the commands and rate profile 0 is the intended flight profile before applying. See [Betaflight Rateprofile Settings](https://betaflight.com/docs/wiki/app/pid-tuning-tab#rateprofile-settings).
+
 ## References
 
 - [Betaflight Serial documentation](https://betaflight.com/docs/wiki/guides/current/Serial)

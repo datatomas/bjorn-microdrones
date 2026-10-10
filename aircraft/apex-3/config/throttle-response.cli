@@ -1,7 +1,10 @@
 # Proposed Apex 3 throttle curve adjustment for rate profile 0.
+# Source preserved in commit 3312aee: thr_mid = 50, thr_expo = 20.
+# Raise expo to 30 for gentler small adjustments around half stick.
+# Midpoint 50 is provisional; actual hover throttle has not been measured.
 # This does not change pitch rates or PID settings; not flight-tested.
 # Confirm rate profile 0 is used for flight and back up the current config.
 rateprofile 0
 set thr_mid = 50
-set thr_expo = 20
+set thr_expo = 30
 save
