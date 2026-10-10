@@ -1,0 +1,17 @@
+# Inspection commands only. These print values; they do not set or save them.
+# Select the rate profile you intend to inspect before running these commands.
+# In the CLI, use: rateprofile 0  (replace 0 with the desired profile number).
+
+get rates_type
+get roll_rc_rate
+get roll_expo
+get roll_srate
+get pitch_rc_rate
+get pitch_expo
+get pitch_srate
+get yaw_rc_rate
+get yaw_expo
+get yaw_srate
+get thr_mid
+get thr_expo
+diff rates

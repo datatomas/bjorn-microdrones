@@ -12,6 +12,8 @@ If crash flip is inactive and throttle still does not respond, check the OSD arm
 
 ## Incremental CLI files
 
+Rates are aircraft-specific. This profile has no proposed rate changes because the throttle and arming behavior still need diagnosis. For read-only rate inspection commands, see the [rates guide](../../README.md#inspecting-and-changing-rates).
+
 | File | Assumptions |
 | --- | --- |
 | [modes.cli](config/modes.cli) | AUX1 ARM high; AUX2 Acro low / Angle middle / Horizon high; AUX3 beeper high; AUX4 crash flip high |

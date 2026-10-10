@@ -7,7 +7,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 cli_files = sorted((ROOT / "aircraft").glob("*/config/*.cli"))
-assert len(cli_files) == 10, f"Expected ten curated CLI files, found {len(cli_files)}"
+assert len(cli_files) == 11, f"Expected eleven curated CLI files, found {len(cli_files)}"
 
 for path in cli_files:
     lines = [line.strip() for line in path.read_text().splitlines()

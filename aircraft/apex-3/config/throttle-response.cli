@@ -1,0 +1,7 @@
+# Proposed Apex 3 throttle curve adjustment for rate profile 0.
+# This does not change pitch rates or PID settings; not flight-tested.
+# Confirm rate profile 0 is used for flight and back up the current config.
+rateprofile 0
+set thr_mid = 50
+set thr_expo = 20
+save

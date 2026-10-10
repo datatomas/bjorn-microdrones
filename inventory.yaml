@@ -1,8 +1,8 @@
 aircraft:
   apex-3:
     frame: 3-inch Apex; exact model unknown
-    flight_controller: unknown
-    firmware: unknown
+    flight_controller: Diatone Mamba F722 (target MAMBAF722_2022A; exact board revision unverified)
+    firmware: Betaflight 2026.6.2 download selected for Apex (Warfare Analytics/firmware/betaflight_2026.6.2_STM32F722_MAMBAF722_2022A_1dba3fa9.hex); last CLI backup dated 2026-10-08 reports 4.5.1; installation unverified
     receiver: ExpressLRS reported on UART4; CRSF proposed
     video_analog_vtx: Rush Tank Mini reported; exact variant unverified
     video_control: SmartAudio reported on UART5; TX5 wiring unverified
@@ -26,4 +26,4 @@ aircraft:
     firmware_config_exports: Betaflight 2026.6.2 per source README
     firmware_image_filename: Betaflight 2026.6.1; provenance unverified
     modes_status: AUX1 ARM high; AUX3 Angle low, Horizon middle, Acro high
-    source: Mobula 7 source project
+    source: /home/ares/Documents/warfareanalytics/mobula7/mobula_7
