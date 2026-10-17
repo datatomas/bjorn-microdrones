@@ -35,6 +35,10 @@ For all axes, throttle curve values, and saved rate differences, use [docs/inspe
 
 The `rateprofile` command selects the active rate profile; `get` only reads settings. To inspect saved changes across rate profiles, use `diff rates`. To apply a rate change, edit the values in **PID Tuning → Rateprofile Settings**, or use the matching `set` commands in CLI, then enter `save` to write and reboot. The Apex 3 [rates-config.cli](aircraft/apex-3/config/rates-config.cli) proposes reducing pitch center sensitivity (`pitch_rc_rate`) and maximum pitch rotation (`pitch_srate`) for a gentler stick response. It is not flight-tested; confirm the active rate profile, ACTUAL rates type, and live values before applying. No rate adjustment is proposed for the Mobula 7 or Bjorn 2.5.
 
+## Radio finder scripts
+
+[scripts/radio/README.md](scripts/radio/README.md) records the RadioMaster Pocket finder install and recovery process. The installer keeps three Tools entries: Bjorn Finder, ELRS Finder, and ELRS Finder Pro. It is separate from the Mobula 7 flight controller configuration.
+
 ## Agent lab
 
 [AGENTS.md](AGENTS.md) sets the operating rules. [inventory.yaml](inventory.yaml) identifies hardware and evidence. [docs/backlog.md](docs/backlog.md) records open checks for future automated agents. No agent is authorized by this repository to flash, arm, spin motors, or publish changes unattended.
