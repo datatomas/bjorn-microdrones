@@ -181,7 +181,7 @@ Telemetry scripts run on a model's **Model -> Display** screen. Use the
 - Keep TX power fixed while comparing readings. Lower it manually if the
   reading saturates and the link has adequate margin. The Bjorn scripts do
   not change transmitter power; ELRS Finder Pro has a separate power editor.
-- Slow, low proximity beeps = weaker RSSI. Fast, high beeps = stronger RSSI.
+- Slow single barks = weaker RSSI. Fast single barks = stronger RSSI.
   The full finder shows its source, raw reading with the correct unit, a
   smoothed strength percentage, a bar, and a peak marker. Press Enter to
   open or close sensor diagnostics. Reopen the tool to reset the peak. `TRSS` is radio-side downlink RSSI;
@@ -189,11 +189,11 @@ Telemetry scripts run on a model's **Model -> Display** screen. Use the
 - If neither RSSI source is available, the full finder checks `TSNR`,
   `RSNR`, `TQly`, `RQly`, then legacy `RSSI`. SNR is shown in dB and link
   quality in percent. These are coarse link-health clues, not dBm or a
-  distance estimate; their beep rate is capped. Antenna orientation,
+  distance estimate; their bark rate is capped. Antenna orientation,
   obstructions, and power settings also affect every reading.
 - If no usable source exists, the full finder shows `NO SIGNAL`, `Src:NA`,
-  and `Str:--`, with a distinct low heartbeat every 1.5 seconds. It does
-  not emit a proximity beep. The archived simple finder still shows
+  and `Str:--`, with a distinct low double bark every 3 seconds. It does
+  not emit the single proximity bark. The archived simple finder still shows
   `NO TELEMETRY` and stays silent.
 - The full Bjorn screen keeps its empty bar and dog visible while waiting.
   It shows the raw `TRSS` (`TR`) and `1RSS` (`1R`) values. If both
@@ -213,7 +213,7 @@ lua scripts/radio/simulate_finders.lua
 ```
 
 This stubs the EdgeTX LCD, tone, time, and telemetry APIs. It checks source
-selection, RSSI/SNR/link-quality fallback, no-signal heartbeat, telemetry
+selection, RSSI/SNR/link-quality fallback, no-signal double bark, telemetry
 recovery, the waiting bar and dog, numeric strength, sensor diagnostics,
 text bounds and logo separation, and script exit. It does
 not verify performance on a powered model or confirm radio installation.
@@ -246,7 +246,7 @@ tones pause while that screen is open. The peak resets when the tool reopens.
 On the sensor screen, `--` means the named sensor is unavailable to Lua;
 `0` means the sensor exists but currently returns zero. A zero RSSI is not
 a usable dBm reading. `TR`/`1R` mean TRSS/1RSS; `TS`/`RS` mean TSNR/RSNR;
-`TQ`/`RQ` mean TQly/RQly, and `RI` means legacy RSSI. A low heartbeat on
+`TQ`/`RQ` mean TQly/RQly, and `RI` means legacy RSSI. A low double bark on
 `NO SIGNAL` only confirms that the script is running.
 
 To obtain a real reading, with propellers removed:
@@ -271,3 +271,25 @@ Observed on hardware: the user reports audible chirps and `NO SIGNAL` with
 an earlier script. The revised layout and sensor view are desktop-checked;
 live signal acquisition and appearance on the Pocket still need confirmation.
 Use the reinstall commands above to transfer this revision.
+
+## Bark sounds
+
+The installer also backs up, copies and byte-verifies `sounds/bjbark.wav`
+and `sounds/bjwait.wav` under `/SOUNDS/bjorn/` on the radio. Run the same
+reinstall commands above for both the Lua script and its sounds.
+
+- A single 180 ms woof repeats every 1.8 seconds at minimum strength,
+  accelerating to every 0.4 seconds at maximum RSSI strength.
+- A lower double woof repeats every 3 seconds when there is no usable signal.
+- Enter pauses finder sounds while the sensor diagnostic screen is open.
+- The radio's WAV volume controls bark loudness. If silent, check that
+  volume and use the SD browser to play `/SOUNDS/bjorn/bjbark.wav` directly.
+
+These are original **synthesized** dog-like cues, not recordings of a real
+Briard. Both assets are mono, 16-bit PCM WAV at 32 kHz. Regenerate them with
+`python3 scripts/radio/sounds/generate_barks.py`; no packages are required.
+The shortest repetition interval exceeds the bark duration. Desktop checks
+verify scheduling and WAV format; sound quality and audio queue behavior on
+the Pocket remain to be checked. The script uses the documented EdgeTX
+[playFile API](https://luadoc.edgetx.org/lua-api-reference/audio-sound/playfile)
+and [supported WAV format](https://github.com/EdgeTX/edgetx-sdcard-sounds).

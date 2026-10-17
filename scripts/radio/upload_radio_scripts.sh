@@ -20,7 +20,12 @@ REPO_ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 stage=$(mktemp -d /tmp/bjorn-radio-stage.XXXXXX)
 trap 'rm -rf "$stage"' EXIT
 backup=$(mktemp -d /tmp/bjorn-radio-backup.XXXXXX)
-mkdir -p "$backup/TOOLS" "$backup/TELEMETRY"
+mkdir -p "$backup/TOOLS" "$backup/TELEMETRY" "$backup/SOUNDS"
+for name in bjbark bjwait; do
+    if [[ -f "$MNT/SOUNDS/bjorn/$name.wav" ]]; then
+        cp -p "$MNT/SOUNDS/bjorn/$name.wav" "$backup/SOUNDS/$name.wav"
+    fi
+done
 for dir in TOOLS TELEMETRY; do
     for name in bjfind.lua bjfind.luac bjsimp.lua bjsimp.luac elfind.lua elfind.luac elpro.lua elpro.luac bjorn-elrs-finder.lua bjorn-elrs-finder-simple.lua zztest.lua; do
         if [[ -f "$MNT/SCRIPTS/$dir/$name" ]]; then
@@ -38,6 +43,11 @@ make_tool ELRS_Finder.lua       elfind "ELRS Finder"
 make_tool ELRS-Finder-Pro.lua   elpro  "ELRS Finder Pro"
 
 sudo mkdir -p "$MNT/SCRIPTS/TOOLS" "$MNT/SCRIPTS/TELEMETRY"
+sudo mkdir -p "$MNT/SOUNDS/bjorn"
+for name in bjbark bjwait; do
+    sudo cp "$REPO_ROOT/scripts/radio/sounds/$name.wav" "$MNT/SOUNDS/bjorn/$name.wav"
+    sudo cmp "$REPO_ROOT/scripts/radio/sounds/$name.wav" "$MNT/SOUNDS/bjorn/$name.wav"
+done
 for name in bjfind elfind elpro; do
     sudo cp "$stage/$name.lua" "$MNT/SCRIPTS/TOOLS/$name.lua"
     sudo cmp "$stage/$name.lua" "$MNT/SCRIPTS/TOOLS/$name.lua"
@@ -58,5 +68,6 @@ if [[ "$TELEMETRY" == --bjorn-telemetry ]]; then
 fi
 sync
 printf 'Installed bjfind, elfind, elpro in TOOLS; telemetry: %s\n' "$TELEMETRY"
+printf 'Installed and verified Bjorn bark sounds in SOUNDS/bjorn\n'
 printf 'Previous finder copies backed up at %s\n' "$backup"
 printf 'Now run: sync && sudo umount %s\n' "$MNT"

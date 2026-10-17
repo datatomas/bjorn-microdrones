@@ -140,8 +140,8 @@ local function run(event)
     if source then lastBeep = nil end
     avg, peak, source = nil, nil, nil
     local now = getTime()
-    if not lastBeep or now - lastBeep >= 150 then
-      playTone(300, 45, 0, 0) -- distinct low heartbeat, not a proximity reading
+    if not lastBeep or now - lastBeep >= 300 then
+      playFile("/SOUNDS/bjorn/bjwait.wav") -- low double woof means no usable signal
       lastBeep = now
     end
     lcd.drawText(2, 14, "NO SIGNAL", MIDSIZE + BLINK)
@@ -166,9 +166,9 @@ local function run(event)
   if source ~= "TRSS" and source ~= "1RSS" then
     beepStrength = math.min(beepStrength, 60) -- link health is a coarse fallback
   end
-  local period = 120 - beepStrength * 1.08 -- 1.2s far, 0.12s close for RSSI
+  local period = 180 - beepStrength * 1.4 -- 1.8s weak, 0.4s strong; bark lasts 0.18s
   if not lastBeep or now - lastBeep >= period then
-    playTone(math.floor(400 + beepStrength * 10), 35, 0, 0)
+    playFile("/SOUNDS/bjorn/bjbark.wav")
     lastBeep = now
   end
 

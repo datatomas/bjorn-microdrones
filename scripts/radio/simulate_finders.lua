@@ -16,6 +16,9 @@ for _, file in ipairs(files) do
   playTone = function(freq, duration)
     tones[#tones + 1] = { freq = freq, duration = duration, at = clock }
   end
+  playFile = function(path)
+    tones[#tones + 1] = { path = path, at = clock }
+  end
   lcd = {
     clear = function() labels, outlines, fills = {}, 0, 0 end,
     drawText = function(x, y, label, flags)
@@ -64,8 +67,8 @@ for _, file in ipairs(files) do
   if full then
     assert(has("NO SIGNAL") and has("Src:NA  Str:--") and has("ENT: sensors"),
            file .. ": no-signal labels")
-    assert(#tones == 3 and tones[3].freq == 300,
-           file .. ": distinct no-signal chirp")
+    assert(#tones == 3 and tones[3].path == "/SOUNDS/bjorn/bjwait.wav",
+           file .. ": distinct no-signal double bark")
     assert(outlines == 1 and fills > 0, file .. ": empty bar and dog visible")
     assert(has("Src:NA  Str:--") and has("TR:0 1R:0"), file .. ": raw RSSI shown")
   else
@@ -83,6 +86,21 @@ for _, file in ipairs(files) do
     assert(has("TR:0") and has("1R:--"), file .. ": zero versus missing")
     step(205, { TRSS = -65 }, { TRSS = true }, EVT_VIRTUAL_ENTER)
     assert(has("Src:TRSS"), file .. ": return from diagnostics")
+    finder.init()
+    step(1000, { TRSS = -40 }, { TRSS = true })
+    local barkCount = #tones
+    step(1039, { TRSS = -40 }, { TRSS = true })
+    assert(#tones == barkCount, file .. ": no overlapping bark scheduling")
+    step(1040, { TRSS = -40 }, { TRSS = true })
+    assert(#tones == barkCount + 1 and tones[#tones].path == "/SOUNDS/bjorn/bjbark.wav",
+           file .. ": strong signal bark interval")
+    finder.init()
+    step(2000, { TRSS = -110 }, { TRSS = true })
+    barkCount = #tones
+    step(2179, { TRSS = -110 }, { TRSS = true })
+    assert(#tones == barkCount, file .. ": weak signal waits")
+    step(2180, { TRSS = -110 }, { TRSS = true })
+    assert(#tones == barkCount + 1, file .. ": weak signal bark interval")
     local count = #tones
     finder.init()
     step(300, { RSNR = 5 }, { RSNR = true })
