@@ -184,7 +184,7 @@ Telemetry scripts run on a model's **Model -> Display** screen. Use the
 - Slow, low proximity beeps = weaker RSSI. Fast, high beeps = stronger RSSI.
   The full finder shows its source, raw reading with the correct unit, a
   smoothed strength percentage, a bar, and a peak marker. Press Enter to
-  reset the peak before a new sweep. `TRSS` is radio-side downlink RSSI;
+  open or close sensor diagnostics. Reopen the tool to reset the peak. `TRSS` is radio-side downlink RSSI;
   `1RSS` is model-side uplink RSSI.
 - If neither RSSI source is available, the full finder checks `TSNR`,
   `RSNR`, `TQly`, `RQly`, then legacy `RSSI`. SNR is shown in dB and link
@@ -214,8 +214,8 @@ lua scripts/radio/simulate_finders.lua
 
 This stubs the EdgeTX LCD, tone, time, and telemetry APIs. It checks source
 selection, RSSI/SNR/link-quality fallback, no-signal heartbeat, telemetry
-recovery, the waiting bar and dog, numeric strength, peak reset, and script
-exit. It does
+recovery, the waiting bar and dog, numeric strength, sensor diagnostics,
+text bounds and logo separation, and script exit. It does
 not verify performance on a powered model or confirm radio installation.
 
 Hardware verification pending: with propellers removed, select the intended
@@ -235,3 +235,39 @@ curl -L -o scripts/radio/ELRS_Finder.lua \
 curl -L -o scripts/radio/ELRS-Finder-Pro.lua \
   https://raw.githubusercontent.com/nerdCopter/ELRS-Finder-Pro/master/ELRS-Finder-Pro.lua
 ```
+
+## Briard layout and missing-signal diagnosis (2026-10-17)
+
+The finder now reserves the upper-right corner for a 24×21 pixel Briard
+face with fringe, floppy ears and beard. The reading, source, strength,
+peak and bar occupy separate rows. Enter opens/closes a sensor screen;
+tones pause while that screen is open. The peak resets when the tool reopens.
+
+On the sensor screen, `--` means the named sensor is unavailable to Lua;
+`0` means the sensor exists but currently returns zero. A zero RSSI is not
+a usable dBm reading. `TR`/`1R` mean TRSS/1RSS; `TS`/`RS` mean TSNR/RSNR;
+`TQ`/`RQ` mean TQly/RQly, and `RI` means legacy RSSI. A low heartbeat on
+`NO SIGNAL` only confirms that the script is running.
+
+To obtain a real reading, with propellers removed:
+
+1. Select the correct model on the Pocket, power the receiver and confirm
+   the ExpressLRS link is established.
+2. In the ExpressLRS Lua tool, check that **Telem Ratio** is not **Off**.
+3. Open **Model → Telemetry → Discover new sensors**, wait for sensors,
+   then stop discovery. Check whether `TRSS` or `1RSS` updates live.
+4. Reopen Bjorn Finder and press Enter. Record the seven displayed values
+   if it still says `NO SIGNAL`. Missing sensors point to discovery/names;
+   existing zero readings require checking the live link and telemetry.
+5. If the Mobula 7 uses an integrated SPI ELRS receiver, inspect its
+   Betaflight Receiver tab telemetry setting. Confirm the actual board,
+   receiver type and installed Betaflight version before changing settings.
+   No flight-controller changes or flashing are part of this script update.
+
+See the official [ExpressLRS troubleshooting guide](https://www.expresslrs.org/quick-start/troubleshooting/)
+and [sensor discovery instructions](https://www.expresslrs.org/quick-start/pre-1stflight/).
+
+Observed on hardware: the user reports audible chirps and `NO SIGNAL` with
+an earlier script. The revised layout and sensor view are desktop-checked;
+live signal acquisition and appearance on the Pocket still need confirmation.
+Use the reinstall commands above to transfer this revision.

@@ -18,7 +18,15 @@ for _, file in ipairs(files) do
   end
   lcd = {
     clear = function() labels, outlines, fills = {}, 0, 0 end,
-    drawText = function(_, _, label) labels[#labels + 1] = label end,
+    drawText = function(x, y, label, flags)
+      labels[#labels + 1] = label
+      if full then
+        local width = flags == DBLSIZE and 12 or flags == MIDSIZE + BLINK and 8 or 5
+        local height = flags == DBLSIZE and 16 or flags == MIDSIZE + BLINK and 12 or 7
+        assert(x + #label * width <= 128 and y + height <= 64, "text outside screen: " .. label)
+        assert(y >= 22 or x + #label * width <= 104, "text overlaps Briard: " .. label)
+      end
+    end,
     drawRectangle = function() outlines = outlines + 1 end,
     drawFilledRectangle = function() fills = fills + 1 end,
     drawLine = function() end,
@@ -54,12 +62,12 @@ for _, file in ipairs(files) do
   step(200, { TRSS = 0, ["1RSS"] = 0, TQly = 0, RQly = 0 },
        { TRSS = true, ["1RSS"] = true, TQly = true, RQly = true })
   if full then
-    assert(has("NO SIGNAL") and has("Src:NA") and has("Tip: power RX / scan"),
+    assert(has("NO SIGNAL") and has("Src:NA  Str:--") and has("ENT: sensors"),
            file .. ": no-signal labels")
     assert(#tones == 3 and tones[3].freq == 300,
            file .. ": distinct no-signal chirp")
     assert(outlines == 1 and fills > 0, file .. ": empty bar and dog visible")
-    assert(has("Str:--") and has("TR:0 1R:0"), file .. ": raw RSSI shown")
+    assert(has("Src:NA  Str:--") and has("TR:0 1R:0"), file .. ": raw RSSI shown")
   else
     assert(has("NO TELEMETRY") and #tones == 2, file .. ": loss silences tone")
   end
@@ -69,7 +77,12 @@ for _, file in ipairs(files) do
   step(202, { TRSS = -40, TQly = 100 }, { TRSS = true, TQly = true })
   step(203, { TRSS = -100, TQly = 100 }, { TRSS = true, TQly = true }, EVT_VIRTUAL_ENTER)
   if full then
-    assert(has("pk -68"), file .. ": peak reset")
+    assert(has("SENSORS") and has("TR:-100") and has("1R:--"),
+           file .. ": diagnostics distinguish missing sensors")
+    step(204, { TRSS = 0 }, { TRSS = true })
+    assert(has("TR:0") and has("1R:--"), file .. ": zero versus missing")
+    step(205, { TRSS = -65 }, { TRSS = true }, EVT_VIRTUAL_ENTER)
+    assert(has("Src:TRSS"), file .. ": return from diagnostics")
     local count = #tones
     finder.init()
     step(300, { RSNR = 5 }, { RSNR = true })
@@ -80,5 +93,5 @@ for _, file in ipairs(files) do
            file .. ": link-quality fallback keeps percent units")
   end
   assert(step(400, {}, {}, EVT_VIRTUAL_EXIT) == 1, file .. ": tool exit")
-  print(file .. ": source fallback, UI, tones, recovery, peak/exit OK")
+  print(file .. ": source fallback, UI, tones, recovery, diagnostics/exit OK")
 end
