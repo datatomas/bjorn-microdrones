@@ -7,7 +7,7 @@ RadioMaster Pocket, EdgeTX, 128x64 mono screen, internal ExpressLRS module.
 
 | File | Origin | Purpose |
 |------|--------|---------|
-| `bjorn-elrs-finder.lua` | ours | Finder using radio-side downlink `TRSS` first, with `1RSS` uplink fallback, EMA smoothing, and a resettable peak marker. Screen title: `BJORN FINDER`. |
+| `bjorn-elrs-finder.lua` | ours | Finder using `TRSS`/`1RSS` RSSI first, then SNR/link-quality fallbacks, with a numeric strength bar, source label, tip, peak marker, and small pixel Briard. Screen title: `BJORN FINDER`. |
 | `bjorn-elrs-finder-simple.lua` | ours | Archived minimal alternative; not installed by the current upload script. |
 | `ELRS_Finder.lua` | [iamsunilchahal/edgetx-lua-scripts-bw](https://github.com/iamsunilchahal/edgetx-lua-scripts-bw) | Community reference finder (kept for comparison). |
 | `ELRS-Finder-Pro.lua` | [nerdCopter/ELRS-Finder-Pro](https://github.com/nerdCopter/ELRS-Finder-Pro) | Community finder with automatic TX-power stepping. |
@@ -55,6 +55,15 @@ no finder `.luac` caches, no old `zztest.lua` diagnostic, and no finder
 copies in `SCRIPTS/TELEMETRY`. The card was synced and unmounted. These are
 filesystem observations; appearance in **SYS → Tools** and behavior with a
 powered Mobula 7 still need confirmation on the radio.
+
+Later that day, the updated `bjfind.lua` with the waiting bar, pixel dog,
+and raw RSSI readout was copied and byte-verified on the same card, then
+synced and unmounted. The live telemetry result remains unverified.
+
+The subsequent source/strength/tip update added SNR and link-quality
+fallbacks and a distinct no-signal chirp. Its `bjfind.lua` copy was again
+byte-verified on the card, synced, and unmounted. The Pocket's live sensor
+values and audible behavior remain to be checked with the powered model.
 
 To keep **Bjorn Finder** on a telemetry screen too, use
 `scripts/radio/upload_radio_scripts.sh /mnt/radio --bjorn-telemetry` instead
@@ -172,13 +181,27 @@ Telemetry scripts run on a model's **Model -> Display** screen. Use the
 - Keep TX power fixed while comparing readings. Lower it manually if the
   reading saturates and the link has adequate margin. The Bjorn scripts do
   not change transmitter power; ELRS Finder Pro has a separate power editor.
-- Slow, low beeps = far. Fast, high beeps = close. The bar shows smoothed
-  signal; the full finder's peak marker shows the strongest reading so far.
-  Press Enter to reset that peak before a new sweep. The source label shows
-  `TRSS` (radio-side downlink) or `1RSS` (model-side uplink fallback).
-- If telemetry is lost, the Bjorn finders show `NO TELEMETRY` and stop
-  beeping. A dBm value is only a relative clue; antenna orientation,
-  obstructions, and power settings also affect it.
+- Slow, low proximity beeps = weaker RSSI. Fast, high beeps = stronger RSSI.
+  The full finder shows its source, raw reading with the correct unit, a
+  smoothed strength percentage, a bar, and a peak marker. Press Enter to
+  reset the peak before a new sweep. `TRSS` is radio-side downlink RSSI;
+  `1RSS` is model-side uplink RSSI.
+- If neither RSSI source is available, the full finder checks `TSNR`,
+  `RSNR`, `TQly`, `RQly`, then legacy `RSSI`. SNR is shown in dB and link
+  quality in percent. These are coarse link-health clues, not dBm or a
+  distance estimate; their beep rate is capped. Antenna orientation,
+  obstructions, and power settings also affect every reading.
+- If no usable source exists, the full finder shows `NO SIGNAL`, `Src:NA`,
+  and `Str:--`, with a distinct low heartbeat every 1.5 seconds. It does
+  not emit a proximity beep. The archived simple finder still shows
+  `NO TELEMETRY` and stays silent.
+- The full Bjorn screen keeps its empty bar and dog visible while waiting.
+  It shows the raw `TRSS` (`TR`) and `1RSS` (`1R`) values. If both
+  are zero, verify the selected model, receiver power, and **Model → Telemetry
+  → Discover new sensors** with propellers removed. EdgeTX returns zero for a
+  missing or stopped telemetry source. The community finders still draw a bar
+  and may beep at their default weak-signal value when both sources are zero;
+  that sound does not prove the model is linked.
 - Only works while the lost drone's battery still powers the receiver.
   For the last few meters use a buzzer or Betaflight DShot beacon
   (motor chirp on a switch) instead.
@@ -190,7 +213,9 @@ lua scripts/radio/simulate_finders.lua
 ```
 
 This stubs the EdgeTX LCD, tone, time, and telemetry APIs. It checks source
-selection, telemetry loss and recovery, peak reset, and script exit. It does
+selection, RSSI/SNR/link-quality fallback, no-signal heartbeat, telemetry
+recovery, the waiting bar and dog, numeric strength, peak reset, and script
+exit. It does
 not verify performance on a powered model or confirm radio installation.
 
 Hardware verification pending: with propellers removed, select the intended
