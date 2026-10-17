@@ -22,7 +22,7 @@ Identify the radio's approximately 239 MB FAT partition each time. The
 placeholder `/dev/sdX1` is not a working device path.
 
 ```bash
-cd /home/ares/Documents/gitrepos/bjorn
+cd /home/ares/Documents/gitrepos/bjorn-microdrones
 lsblk -o NAME,SIZE,FSTYPE,LABEL,MOUNTPOINT
 sudo mkdir -p /mnt/radio
 sudo mount -o rw /dev/sde1 /mnt/radio       # use the partition found above
