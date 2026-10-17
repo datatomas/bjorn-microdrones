@@ -5,30 +5,24 @@
 
 local DBM_MIN, DBM_MAX = -110, -40
 local avg, peak, source, lastBeep, diagnostics
--- 24x21 Briard face: floppy ears, long fringe over the eyes, muzzle and beard.
--- The whole sprite stays in its own right-hand column on a 128x64 screen.
+-- Simple floppy-eared dog face; reserved right-hand column.
 local DOG = {
-  "###       ####       ###",
-  "####     ######     ####",
-  "#####   ########   #####",
-  "########################",
-  "########################",
-  "###### ########## ######",
-  " ##### ########## ##### ",
-  " #####  ########  ##### ",
-  "  ##### ######## #####  ",
-  "  #####  ######  #####  ",
-  "   #####  ####  #####   ",
-  "   ######      ######   ",
-  "    #### #    # ####    ",
-  "    ####        ####    ",
-  "     ####  ##  ####     ",
-  "      ######## ####     ",
-  "       ##########       ",
-  "        ########        ",
-  "         ######         ",
-  "          ####          ",
-  "           ##           ",
+  "       #######",
+  "     ###########",
+  "   #####     #####",
+  "  ####         ####",
+  " #####  #   #  #####",
+  " #####         #####",
+  " #####         #####",
+  " #####   ###   #####",
+  "  ####   ###   ####",
+  "   ###    #    ###",
+  "    ##  # # #  ##",
+  "     #   ###   #",
+  "      #       #",
+  "       #######",
+  "         ###",
+  "       #######",
 }
 
 local function clamp(x, low, high)
@@ -141,7 +135,7 @@ local function run(event)
     avg, peak, source = nil, nil, nil
     local now = getTime()
     if not lastBeep or now - lastBeep >= 300 then
-      playFile("/SOUNDS/bjorn/bjwait.wav") -- low double woof means no usable signal
+      playFile("/SOUNDS/bjorn/bjwait.wav") -- double bark means no usable signal
       lastBeep = now
     end
     lcd.drawText(2, 14, "NO SIGNAL", MIDSIZE + BLINK)
@@ -166,7 +160,7 @@ local function run(event)
   if source ~= "TRSS" and source ~= "1RSS" then
     beepStrength = math.min(beepStrength, 60) -- link health is a coarse fallback
   end
-  local period = 180 - beepStrength * 1.4 -- 1.8s weak, 0.4s strong; bark lasts 0.18s
+  local period = 180 - beepStrength * 1.2 -- 1.8s weak, 0.6s strong; real bark lasts 0.4s
   if not lastBeep or now - lastBeep >= period then
     playFile("/SOUNDS/bjorn/bjbark.wav")
     lastBeep = now

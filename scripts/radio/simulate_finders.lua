@@ -89,9 +89,9 @@ for _, file in ipairs(files) do
     finder.init()
     step(1000, { TRSS = -40 }, { TRSS = true })
     local barkCount = #tones
-    step(1039, { TRSS = -40 }, { TRSS = true })
+    step(1059, { TRSS = -40 }, { TRSS = true })
     assert(#tones == barkCount, file .. ": no overlapping bark scheduling")
-    step(1040, { TRSS = -40 }, { TRSS = true })
+    step(1060, { TRSS = -40 }, { TRSS = true })
     assert(#tones == barkCount + 1 and tones[#tones].path == "/SOUNDS/bjorn/bjbark.wav",
            file .. ": strong signal bark interval")
     finder.init()

@@ -7,7 +7,7 @@ RadioMaster Pocket, EdgeTX, 128x64 mono screen, internal ExpressLRS module.
 
 | File | Origin | Purpose |
 |------|--------|---------|
-| `bjorn-elrs-finder.lua` | ours | Finder using `TRSS`/`1RSS` RSSI first, then SNR/link-quality fallbacks, with a numeric strength bar, source label, tip, peak marker, and small pixel Briard. Screen title: `BJORN FINDER`. |
+| `bjorn-elrs-finder.lua` | ours | Finder using `TRSS`/`1RSS` RSSI first, then SNR/link-quality fallbacks, with a numeric strength bar, source label, tip, peak marker, and simple floppy-eared pixel dog. Screen title: `BJORN FINDER`. |
 | `bjorn-elrs-finder-simple.lua` | ours | Archived minimal alternative; not installed by the current upload script. |
 | `ELRS_Finder.lua` | [iamsunilchahal/edgetx-lua-scripts-bw](https://github.com/iamsunilchahal/edgetx-lua-scripts-bw) | Community reference finder (kept for comparison). |
 | `ELRS-Finder-Pro.lua` | [nerdCopter/ELRS-Finder-Pro](https://github.com/nerdCopter/ELRS-Finder-Pro) | Community finder with automatic TX-power stepping. |
@@ -192,7 +192,7 @@ Telemetry scripts run on a model's **Model -> Display** screen. Use the
   distance estimate; their bark rate is capped. Antenna orientation,
   obstructions, and power settings also affect every reading.
 - If no usable source exists, the full finder shows `NO SIGNAL`, `Src:NA`,
-  and `Str:--`, with a distinct low double bark every 3 seconds. It does
+  and `Str:--`, with a distinct double bark every 3 seconds. It does
   not emit the single proximity bark. The archived simple finder still shows
   `NO TELEMETRY` and stays silent.
 - The full Bjorn screen keeps its empty bar and dog visible while waiting.
@@ -238,15 +238,15 @@ curl -L -o scripts/radio/ELRS-Finder-Pro.lua \
 
 ## Briard layout and missing-signal diagnosis (2026-10-17)
 
-The finder now reserves the upper-right corner for a 24×21 pixel Briard
-face with fringe, floppy ears and beard. The reading, source, strength,
+The finder now reserves the upper-right corner for a simple pixel dog
+face with floppy ears, eyes and a muzzle. The reading, source, strength,
 peak and bar occupy separate rows. Enter opens/closes a sensor screen;
 tones pause while that screen is open. The peak resets when the tool reopens.
 
 On the sensor screen, `--` means the named sensor is unavailable to Lua;
 `0` means the sensor exists but currently returns zero. A zero RSSI is not
 a usable dBm reading. `TR`/`1R` mean TRSS/1RSS; `TS`/`RS` mean TSNR/RSNR;
-`TQ`/`RQ` mean TQly/RQly, and `RI` means legacy RSSI. A low double bark on
+`TQ`/`RQ` mean TQly/RQly, and `RI` means legacy RSSI. A double bark on
 `NO SIGNAL` only confirms that the script is running.
 
 To obtain a real reading, with propellers removed:
@@ -278,16 +278,18 @@ The installer also backs up, copies and byte-verifies `sounds/bjbark.wav`
 and `sounds/bjwait.wav` under `/SOUNDS/bjorn/` on the radio. Run the same
 reinstall commands above for both the Lua script and its sounds.
 
-- A single 180 ms woof repeats every 1.8 seconds at minimum strength,
-  accelerating to every 0.4 seconds at maximum RSSI strength.
-- A lower double woof repeats every 3 seconds when there is no usable signal.
+- A single 400 ms recorded bark repeats every 1.8 seconds at minimum strength,
+  accelerating to every 0.6 seconds at maximum RSSI strength.
+- A double bark repeats every 3 seconds when there is no usable signal.
 - Enter pauses finder sounds while the sensor diagnostic screen is open.
 - The radio's WAV volume controls bark loudness. If silent, check that
   volume and use the SD browser to play `/SOUNDS/bjorn/bjbark.wav` directly.
 
-These are original **synthesized** dog-like cues, not recordings of a real
-Briard. Both assets are mono, 16-bit PCM WAV at 32 kHz. Regenerate them with
-`python3 scripts/radio/sounds/generate_barks.py`; no packages are required.
+The sound is a real dog recording: **Single Dog Bark** by **kwahmah_02**,
+released under CC0. The original downloaded preview, converted WAVs and
+[source/license details](sounds/SOURCES.md) are kept in the repository.
+Both WAV assets are mono, 16-bit PCM at 32 kHz. Regenerate them with
+`python3 scripts/radio/sounds/generate_barks.py` (requires `ffmpeg`).
 The shortest repetition interval exceeds the bark duration. Desktop checks
 verify scheduling and WAV format; sound quality and audio queue behavior on
 the Pocket remain to be checked. The script uses the documented EdgeTX
